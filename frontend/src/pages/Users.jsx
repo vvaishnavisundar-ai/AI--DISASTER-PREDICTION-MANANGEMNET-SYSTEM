@@ -149,8 +149,8 @@ const Users = () => {
           </div>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto pb-4">
+          <table className="w-full text-left border-collapse whitespace-nowrap">
             <thead>
               <tr className="bg-background/80 text-muted-foreground text-xs uppercase tracking-wider">
                 <th className="p-4 font-bold border-b border-border">User ID</th>

@@ -1,76 +1,131 @@
-# AI Disaster Prediction Management System
+# AI Disaster Prediction & Management System
 
-![Project Status](https://img.shields.io/badge/Status-Active-success)
-![Architecture](https://img.shields.io/badge/Architecture-MERN%20%2B%20Python-blue)
-![Real-Time](https://img.shields.io/badge/Real--Time-WebSockets-orange)
+![AI Disaster Prediction](https://img.shields.io/badge/Status-Active-success)
+![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-blue)
+![NodeJS](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green)
+![Python](https://img.shields.io/badge/ML%20Engine-Python%20%2B%20Flask-yellow)
 
-An advanced, full-stack web application designed to predict natural disasters, manage emergency broadcasts, and monitor global risks in real-time. Built with a Microservice Architecture to handle mathematical modeling separately from the main API.
+A real-time, production-level web application designed to monitor, predict, and manage natural disasters using Machine Learning and geospatial data. Features a highly interactive, responsive Cyberpunk-themed UI with both Dark and Light modes.
 
-## 🚀 Features
+## 🌟 Key Features
 
-- **Real-Time Live Map:** Interactive geographic map plotting active danger zones and historical disasters.
-- **AI Prediction Engine:** A dedicated Python microservice that analyzes environmental factors (temperature, pressure, humidity, wind) to predict Disaster Probabilities and severity.
-- **Admin Command Center:** Secure, role-based dashboard for authorized personnel to monitor real-time system logs and issue manual emergency broadcasts.
-- **Live Event Streaming:** Utilizes WebSockets (`Socket.io`) to instantly push alerts and prediction logs to all connected clients without refreshing the page.
-- **Authentication:** Secure user login utilizing JSON Web Tokens (JWT) and encrypted passwords.
+### 🛡️ Role-Based Access Control (RBAC)
+- **Admin Dashboard**: Full access to global disaster analytics, prediction triggers, and user management.
+- **Client Dashboard**: Public-facing portal to view live alerts, nearest shelters, and regional disaster history.
+- Secure JWT-based authentication.
 
-## 🏗️ System Architecture
+### 🗺️ Live Geospatial Monitoring
+- Interactive **Leaflet** map integration.
+- Real-time plotting of active disaster zones (Floods, Wildfires, Earthquakes, Cyclones) with heatmaps and severity markers.
 
-This project is built using an impressive multi-tier architecture to demonstrate scalability and separation of concerns:
+### 📊 Real-Time Analytics & Data Visualization
+- Powered by **Recharts**.
+- Dynamic **Prediction Trends** (Line Charts).
+- **Disaster Distribution** (Pie Charts).
+- **Risk by Region** (Bar Charts).
+- **AI Model Performance Accuracy** metrics.
 
-### 1. Frontend (Client)
-- **Tech Stack:** React.js, Tailwind CSS, Vite
-- **Details:** A responsive, dark-mode Single Page Application (SPA). Uses `Recharts` for interactive data visualization and `React-Leaflet` for dynamic mapping.
+### 🤖 Machine Learning Integration
+- Python (Flask) microservice backend for AI predictions.
+- Simulates advanced environmental data processing (Temperature, Humidity, Wind Speed, Soil Moisture) to calculate disaster probabilities.
 
-### 2. Backend (Main API Server)
-- **Tech Stack:** Node.js, Express.js
-- **Details:** A RESTful API that handles user authentication, CRUD operations for alerts and predictions, and WebSocket connections for real-time data streaming.
+### 🚨 Emergency Response Tools
+- **Live Alerts Feed**: Rolling updates on critical environmental thresholds.
+- **Shelters Database**: Searchable grid of safe zones and evacuation centers.
+- **Disaster History**: Track active/resolved events and export CSV aftermath reports.
 
-### 3. Database
-- **Tech Stack:** MongoDB, Mongoose (ODM)
-- **Details:** A NoSQL database storing user profiles with clearance levels, historical predictions, and active broadcast alerts.
+---
 
-### 4. AI Engine (Microservice)
-- **Tech Stack:** Python, Flask
-- **Details:** An isolated microservice dedicated to handling mathematical predictions. Instead of a simple database lookup, this service utilizes a **Rule-Based Expert System** to calculate probability thresholds based on real-time meteorological inputs (e.g., wind speed, air pressure, temperature, humidity). This demonstrates an advanced understanding of deterministic algorithm design and Inter-Process Communication between a Node.js API and a Python backend.
+## 🛠️ Tech Stack
 
-## ⚙️ Installation & Setup
+### Frontend
+- **React.js** (via Vite for lightning-fast HMR)
+- **Tailwind CSS** (for fully responsive, utility-first styling)
+- **React Router** (Client-side routing)
+- **Recharts** (SVG data visualization)
+- **Lucide React** (Modern iconography)
+- **Leaflet & React-Leaflet** (Interactive maps)
+
+### Backend (Node.js API)
+- **Express.js** (REST API framework)
+- **MongoDB & Mongoose** (NoSQL Database for Users and Disaster Records)
+- **JSON Web Tokens (JWT)** (Authentication)
+- **Bcrypt.js** (Password hashing)
+
+### Machine Learning (Python API)
+- **Flask** (Lightweight Python server)
+- **Scikit-Learn** (Random Forest Regressor for prediction modeling)
+- **Pandas / NumPy** (Data processing)
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
-- Python (3.12+)
-- MongoDB (Running locally or MongoDB Atlas)
+- Python (3.9+)
+- MongoDB instance (Local or Atlas)
 
-### 1. Backend Setup (Node.js)
+### 1. Clone the Repository
+```bash
+git clone https://github.com/vvaishnavisundar-ai/AI--DISASTER-PREDICTION-MANANGEMNET-SYSTEM.git
+cd "AI--DISASTER-PREDICTION-MANANGEMNET-SYSTEM"
+```
+
+### 2. Setup Node.js Backend
 ```bash
 cd backend
 npm install
-# Create a .env file with PORT=5000 and MONGO_URI
-npm start
 ```
-
-### 2. Frontend Setup (React)
+Create a `.env` file in the `backend` directory:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_super_secret_key
+ML_API_URL=http://localhost:5001
+```
+Start the server:
 ```bash
-cd frontend
-npm install
 npm run dev
 ```
 
-### 3. ML Service Setup (Python)
+### 3. Setup Python ML Backend
+Open a new terminal and navigate to the `ml_backend` folder:
 ```bash
-cd ml-service
+cd ml_backend
 pip install -r requirements.txt
+```
+Start the Flask server:
+```bash
 python main.py
 ```
+*(The ML server runs on port 5001 by default).*
 
-## 👨‍💻 Usage
-1. Open `http://localhost:5173` in your browser.
-2. Login with your secure admin credentials.
-3. Use the **AI Prediction** tab to simulate environmental conditions.
-4. Watch the **Live Map** and **Dashboard** update instantly via WebSockets!
+### 4. Setup React Frontend
+Open a new terminal and navigate to the `frontend` folder:
+```bash
+cd frontend
+npm install
+```
+Create a `.env` file in the `frontend` directory:
+```env
+VITE_API_URL=http://localhost:5000
+```
+Start the Vite development server:
+```bash
+npm run dev
+```
 
-## 🎓 Academic Highlights
-- Implements secure **JWT Authentication**.
-- Demonstrates **Microservice Architecture** (Node.js + Python).
-- Uses **WebSockets (Socket.io)** for real-time bidirectional communication.
-- Features modern **UI/UX** with responsive design and interactive charting.
+---
+
+## 📱 Mobile Responsiveness
+The UI has been rigorously tested and optimized for mobile devices. It features:
+- Fluid flexbox layouts that prevent chart overlapping.
+- Custom horizontal scrolling tables to prevent data truncation.
+- Protected `overflow` bounds to ensure smooth native scrolling.
+
+## 🎨 Theming
+The application supports persistent **Dark Mode** and **Light Mode** configurations via CSS variables, heavily prioritizing a sleek, high-contrast, professional "Cyberpunk" aesthetic.
+
+## 📄 License
+This project is proprietary and developed as part of a specialized portfolio. All rights reserved.

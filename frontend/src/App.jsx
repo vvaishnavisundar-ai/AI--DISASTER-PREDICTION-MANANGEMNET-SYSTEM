@@ -60,6 +60,15 @@ function Layout({ children, isSidebarOpen, setIsSidebarOpen }) {
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  React.useEffect(() => {
+    const savedTheme = localStorage.getItem('scareychh_theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+  }, []);
+
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Layout isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}>

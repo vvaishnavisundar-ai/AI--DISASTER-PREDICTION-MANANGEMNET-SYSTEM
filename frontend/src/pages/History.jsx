@@ -124,7 +124,7 @@ Soil Moisture: ${evt.soilMoisture || 'N/A'}%`);
 
   if (isAdmin) {
     return (
-      <div className="p-8 animate-in fade-in duration-500">
+      <div className="p-4 md:p-8 animate-in fade-in duration-500">
         <div className="flex justify-between items-center mb-8">
           <header>
             <h2 className="text-3xl font-bold tracking-tight">Disaster History Database</h2>
@@ -142,51 +142,53 @@ Soil Moisture: ${evt.soilMoisture || 'N/A'}%`);
               <input type="text" placeholder="Search by region or event type..." className="bg-transparent border-none outline-none w-full text-sm" />
             </div>
           </div>
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-background/80 text-muted-foreground text-sm">
-                <th className="p-4 font-medium border-b border-border">Record ID</th>
-                <th className="p-4 font-medium border-b border-border">Date</th>
-                <th className="p-4 font-medium border-b border-border">Type & Region</th>
-                <th className="p-4 font-medium border-b border-border">Severity</th>
-                <th className="p-4 font-medium border-b border-border">Status</th>
-                <th className="p-4 font-medium border-b border-border text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan="6" className="p-8 text-center text-muted-foreground"><Activity className="w-6 h-6 animate-spin mx-auto"/></td></tr>
-              ) : historyData.length === 0 ? (
-                <tr><td colSpan="6" className="p-8 text-center text-muted-foreground">No historical records found. Run a prediction to generate data.</td></tr>
-              ) : historyData.map((evt) => (
-                <tr key={evt._id} className="hover:bg-background/50 transition-colors border-b border-border last:border-0">
-                  <td className="p-4 text-sm font-mono text-gray-400">{evt._id.slice(-6).toUpperCase()}</td>
-                  <td className="p-4 text-sm">{formatDate(evt.createdAt)}</td>
-                  <td className="p-4">
-                    <p className="text-sm font-bold">{evt.disasterType}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="w-3 h-3"/>{evt.region}</p>
-                  </td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${getSeverityColor(evt.severity)}`}>
-                      {evt.severity || 'Normal'}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <span className={`px-2 py-1 rounded text-xs font-bold ${evt.status === 'Resolved' ? 'bg-success/20 text-success' : 'bg-blue-500/20 text-blue-500'}`}>
-                      {evt.status || 'Active'}
-                    </span>
-                  </td>
-                  <td className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => showDetails(evt)} title="View Details" className="p-2 bg-background border border-border rounded hover:bg-primary/20 hover:text-primary transition-colors"><FileText className="w-4 h-4" /></button>
-                      <button onClick={() => editStatus(evt)} title="Edit Status" className="p-2 bg-background border border-border rounded hover:bg-warning/20 hover:text-warning transition-colors"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={() => deleteRecord(evt._id)} title="Delete Record" className="p-2 bg-background border border-border rounded hover:bg-danger/20 hover:text-danger transition-colors"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto pb-4">
+            <table className="w-full text-left border-collapse whitespace-nowrap">
+              <thead>
+                <tr className="bg-background/80 text-muted-foreground text-sm">
+                  <th className="p-4 font-medium border-b border-border">Record ID</th>
+                  <th className="p-4 font-medium border-b border-border">Date</th>
+                  <th className="p-4 font-medium border-b border-border">Type & Region</th>
+                  <th className="p-4 font-medium border-b border-border">Severity</th>
+                  <th className="p-4 font-medium border-b border-border">Status</th>
+                  <th className="p-4 font-medium border-b border-border text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan="6" className="p-8 text-center text-muted-foreground"><Activity className="w-6 h-6 animate-spin mx-auto"/></td></tr>
+                ) : historyData.length === 0 ? (
+                  <tr><td colSpan="6" className="p-8 text-center text-muted-foreground">No historical records found. Run a prediction to generate data.</td></tr>
+                ) : historyData.map((evt) => (
+                  <tr key={evt._id} className="hover:bg-background/50 transition-colors border-b border-border last:border-0">
+                    <td className="p-4 text-sm font-mono text-gray-400">{evt._id.slice(-6).toUpperCase()}</td>
+                    <td className="p-4 text-sm">{formatDate(evt.createdAt)}</td>
+                    <td className="p-4">
+                      <p className="text-sm font-bold">{evt.disasterType}</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1"><MapPin className="w-3 h-3"/>{evt.region}</p>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${getSeverityColor(evt.severity)}`}>
+                        {evt.severity || 'Normal'}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${evt.status === 'Resolved' ? 'bg-success/20 text-success' : 'bg-blue-500/20 text-blue-500'}`}>
+                        {evt.status || 'Active'}
+                      </span>
+                    </td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => showDetails(evt)} title="View Details" className="p-2 bg-background border border-border rounded hover:bg-primary/20 hover:text-primary transition-colors"><FileText className="w-4 h-4" /></button>
+                        <button onClick={() => editStatus(evt)} title="Edit Status" className="p-2 bg-background border border-border rounded hover:bg-warning/20 hover:text-warning transition-colors"><Edit2 className="w-4 h-4" /></button>
+                        <button onClick={() => deleteRecord(evt._id)} title="Delete Record" className="p-2 bg-background border border-border rounded hover:bg-danger/20 hover:text-danger transition-colors"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
@@ -194,7 +196,7 @@ Soil Moisture: ${evt.soilMoisture || 'N/A'}%`);
 
   // Client View
   return (
-    <div className="p-8 max-w-5xl mx-auto animate-in fade-in duration-500">
+    <div className="p-4 md:p-8 max-w-5xl mx-auto animate-in fade-in duration-500">
       <header className="mb-12">
         <h2 className="text-3xl font-bold tracking-tight">Regional Disaster History</h2>
         <p className="text-muted-foreground mt-1">Review live and past AI-predicted environmental events.</p>

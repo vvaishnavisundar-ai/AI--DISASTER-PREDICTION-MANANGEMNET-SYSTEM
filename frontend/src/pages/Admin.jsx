@@ -73,7 +73,7 @@ const Admin = () => {
 
 
   return (
-    <div className="p-4 md:p-8 space-y-6 animate-in fade-in duration-500 max-w-[1600px] mx-auto font-sans bg-background min-h-screen text-white">
+    <div className="p-4 md:p-8 animate-in fade-in duration-500 max-w-[1600px] mx-auto font-sans bg-background min-h-screen text-white">
       
       {/* 4 Top Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -125,12 +125,12 @@ const Admin = () => {
       </div>
 
       {/* Middle Section: Map + Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[400px]">
+      <div className="flex flex-col lg:flex-row gap-6 mt-6 mb-6">
         
         {/* Real Interactive Leaflet Map */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-2xl overflow-hidden flex flex-col relative h-full z-0">
+        <div className="flex-1 bg-surface border border-border rounded-2xl overflow-hidden flex flex-col relative h-[500px] z-0">
           <div className="p-4 border-b border-border bg-background/80 backdrop-blur-md absolute top-0 w-full z-[1000] flex justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Live Disaster Map</h3>
+            <h3 className="text-sm font-bold flex items-center gap-2"><MapPin className="w-4 h-4 text-primary" /> Live Disaster Map</h3>
           </div>
           <div className="h-full w-full bg-background relative z-0">
               <MapContainer 
@@ -160,12 +160,12 @@ const Admin = () => {
         </div>
 
         {/* Live Alerts Feed */}
-        <div className="bg-surface border border-border rounded-2xl flex flex-col h-full">
+        <div className="w-full lg:w-[450px] xl:w-[500px] bg-surface border border-border rounded-2xl flex flex-col h-[500px] shrink-0 overflow-hidden">
           <div className="p-4 border-b border-border flex justify-between items-center">
             <h3 className="text-sm font-bold text-white">Live Alerts Feed</h3>
             <button onClick={() => navigate('/alerts')} className="text-xs text-blue-500 hover:text-white">View All</button>
           </div>
-          <div className="p-4 overflow-y-auto space-y-3 custom-scrollbar flex-1">
+          <div className="p-4 overflow-y-auto space-y-3 custom-scrollbar flex-1 min-h-0">
              {activeAlerts.map((alert, i) => (
                 <div key={i} className="bg-background border border-red-900/50 p-3 rounded-lg flex flex-col hover:border-red-500/50 cursor-pointer">
                   <div className="flex justify-between items-center mb-1">
@@ -188,12 +188,12 @@ const Admin = () => {
       </div>
 
       {/* Bottom 4 Charts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-[250px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-6">
         
         {/* Prediction Trends */}
-        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col">
+        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col h-[300px]">
           <h3 className="text-xs font-bold text-white mb-4">Prediction Trends</h3>
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 w-full min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
@@ -207,9 +207,9 @@ const Admin = () => {
         </div>
 
         {/* Disaster Distribution */}
-        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col">
+        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col h-[300px]">
           <h3 className="text-xs font-bold text-white mb-2">Disaster Distribution</h3>
-          <div className="flex-1 min-h-0 flex items-center justify-between">
+          <div className="flex-1 w-full min-h-[200px] flex items-center justify-between">
             <ResponsiveContainer width="50%" height="100%">
               <PieChart>
                 <Pie data={pieData} innerRadius={30} outerRadius={50} paddingAngle={5} dataKey="value" stroke="none">
@@ -234,9 +234,9 @@ const Admin = () => {
         </div>
 
         {/* Risk by Region */}
-        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col">
+        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col h-[300px]">
           <h3 className="text-xs font-bold text-white mb-4">Risk by Region</h3>
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 w-full min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={regionRiskData} layout="vertical" margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                 <XAxis type="number" hide />
@@ -253,10 +253,10 @@ const Admin = () => {
         </div>
 
         {/* AI Model Performance */}
-        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col">
+        <div className="bg-surface border border-border p-4 rounded-2xl flex flex-col h-[300px]">
           <h3 className="text-xs font-bold text-white mb-2">AI Model Performance</h3>
           <p className="text-[10px] text-gray-500 mb-2">Accuracy</p>
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 w-full min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={aiPerformanceData}>
                 <defs>
