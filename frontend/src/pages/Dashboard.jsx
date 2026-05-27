@@ -65,66 +65,74 @@ const Dashboard = () => {
     };
 
     // 2. Fetch Real Geolocation and APIs
-    const fetchRealLocationData = async () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+    const fetchRealLocationData = () => {
+      return new Promise((resolve) => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const lat = position.coords.latitude;
+              const lon = position.coords.longitude;
 
-            try {
-              // OpenStreetMap Nominatim for Reverse Geocoding
-              const geoRes = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
-              const address = geoRes.data.address;
-              const city = address.city || address.town || address.village || address.county || 'Unknown Area';
-              const country = address.country || '';
+              try {
+                // OpenStreetMap Nominatim for Reverse Geocoding
+                const geoRes = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                const address = geoRes.data.address;
+                const city = address.city || address.town || address.village || address.county || 'Unknown Area';
+                const country = address.country || '';
 
-              // Open-Meteo for Real Weather
-              const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,precipitation`);
-              const tempVal = weatherRes.data.current.temperature_2m;
-              const windSpeed = weatherRes.data.current.wind_speed_10m;
-              const precip = weatherRes.data.current.precipitation;
-              
-              const temp = `${Math.round(tempVal)}°C`;
-              const weatherDesc = getWeatherDescription(weatherRes.data.current.weather_code);
+                // Open-Meteo for Real Weather
+                const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m,precipitation`);
+                const tempVal = weatherRes.data.current.temperature_2m;
+                const windSpeed = weatherRes.data.current.wind_speed_10m;
+                const precip = weatherRes.data.current.precipitation;
+                
+                const temp = `${Math.round(tempVal)}°C`;
+                const weatherDesc = getWeatherDescription(weatherRes.data.current.weather_code);
 
-              // Calculate Real-Time Risks based on actual weather
-              const heatwaveProb = Math.min(99, Math.max(5, Math.round((tempVal / 45) * 100)));
-              const cycloneProb = Math.min(99, Math.max(5, Math.round((windSpeed / 100) * 100)));
-              const floodProb = Math.min(99, Math.max(5, Math.round((precip / 20) * 100)));
-              const earthquakeProb = Math.floor(Math.random() * 15) + 1; // Earthquakes are unpredictable, keep low
+                // Calculate Real-Time Risks based on actual weather
+                const heatwaveProb = Math.min(99, Math.max(5, Math.round((tempVal / 45) * 100)));
+                const cycloneProb = Math.min(99, Math.max(5, Math.round((windSpeed / 100) * 100)));
+                const floodProb = Math.min(99, Math.max(5, Math.round((precip / 20) * 100)));
+                const earthquakeProb = Math.floor(Math.random() * 15) + 1; // Earthquakes are unpredictable, keep low
 
-              const getLevel = (prob) => prob > 75 ? 'Extreme' : prob > 50 ? 'High' : prob > 25 ? 'Medium' : 'Low';
-              const getColor = (prob) => prob > 75 ? 'text-red-500' : prob > 50 ? 'text-orange-500' : prob > 25 ? 'text-yellow-500' : 'text-green-500';
-              const getBg = (prob) => prob > 75 ? 'bg-red-500/10' : prob > 50 ? 'bg-orange-500/10' : prob > 25 ? 'bg-yellow-500/10' : 'bg-green-500/10';
+                const getLevel = (prob) => prob > 75 ? 'Extreme' : prob > 50 ? 'High' : prob > 25 ? 'Medium' : 'Low';
+                const getColor = (prob) => prob > 75 ? 'text-red-500' : prob > 50 ? 'text-orange-500' : prob > 25 ? 'text-yellow-500' : 'text-green-500';
+                const getBg = (prob) => prob > 75 ? 'bg-red-500/10' : prob > 50 ? 'bg-orange-500/10' : prob > 25 ? 'bg-yellow-500/10' : 'bg-green-500/10';
 
-              const realRisks = [
-                { type: 'Flood Risk', level: getLevel(floodProb), probability: floodProb, color: getColor(floodProb), bg: getBg(floodProb) },
-                { type: 'Cyclone Risk', level: getLevel(cycloneProb), probability: cycloneProb, color: getColor(cycloneProb), bg: getBg(cycloneProb) },
-                { type: 'Earthquake Risk', level: getLevel(earthquakeProb), probability: earthquakeProb, color: getColor(earthquakeProb), bg: getBg(earthquakeProb) },
-                { type: 'Heatwave Risk', level: getLevel(heatwaveProb), probability: heatwaveProb, color: getColor(heatwaveProb), bg: getBg(heatwaveProb) }
-              ];
+                const realRisks = [
+                  { type: 'Flood Risk', level: getLevel(floodProb), probability: floodProb, color: getColor(floodProb), bg: getBg(floodProb) },
+                  { type: 'Cyclone Risk', level: getLevel(cycloneProb), probability: cycloneProb, color: getColor(cycloneProb), bg: getBg(cycloneProb) },
+                  { type: 'Earthquake Risk', level: getLevel(earthquakeProb), probability: earthquakeProb, color: getColor(earthquakeProb), bg: getBg(earthquakeProb) },
+                  { type: 'Heatwave Risk', level: getLevel(heatwaveProb), probability: heatwaveProb, color: getColor(heatwaveProb), bg: getBg(heatwaveProb) }
+                ];
 
-              setGeoData({ lat, lon, city, country, temp, weatherDesc, realRisks });
-            } catch (err) {
-              console.error("Error fetching location APIs", err);
-              // Fallback on failure
-              setGeoData(prev => ({...prev, city: 'Location API Error'}));
+                setGeoData({ lat, lon, city, country, temp, weatherDesc, realRisks });
+                resolve();
+              } catch (err) {
+                console.error("Error fetching location APIs", err);
+                setGeoData(prev => ({...prev, city: 'Location API Error'}));
+                resolve();
+              }
+            },
+            (error) => {
+              console.error("Geolocation denied or error:", error);
+              setGeoData(prev => ({...prev, city: 'Location Access Denied'}));
+              resolve();
             }
-          },
-          (error) => {
-            console.error("Geolocation denied or error:", error);
-            setGeoData(prev => ({...prev, city: 'Location Access Denied'}));
-          }
-        );
-      } else {
-        setGeoData(prev => ({...prev, city: 'Geolocation not supported'}));
-      }
-      setLoading(false);
+          );
+        } else {
+          setGeoData(prev => ({...prev, city: 'Geolocation not supported'}));
+          resolve();
+        }
+      });
     };
     
-    fetchBackendData();
-    fetchRealLocationData();
+    const loadAllData = async () => {
+      await Promise.all([fetchBackendData(), fetchRealLocationData()]);
+      setLoading(false);
+    };
+
+    loadAllData();
 
     // Setup real socket connection
     const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000');
