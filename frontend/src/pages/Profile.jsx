@@ -61,8 +61,11 @@ const Profile = () => {
 
   const handleSaveProfileDetails = async (e) => {
     e.preventDefault();
-    if (!editName || !editEmail) return;
-    const success = await handleUpdateProfile({ name: editName, email: editEmail });
+    if (!editName.trim() || !editEmail.trim()) {
+      alert("Error: Full Name and Email Address cannot be empty.");
+      return;
+    }
+    const success = await handleUpdateProfile({ name: editName.trim(), email: editEmail.trim() });
     if (success) {
       setIsEditingProfile(false);
     }
