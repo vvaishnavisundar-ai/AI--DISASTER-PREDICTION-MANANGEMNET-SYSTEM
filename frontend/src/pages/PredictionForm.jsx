@@ -4,20 +4,21 @@ import axios from 'axios';
 const PredictionForm = () => {
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
-    disaster_type: 'Flood',
+    disasterType: 'Flood',
     temperature: 30,
     rainfall: 100,
     humidity: 70,
-    wind_speed: 15,
-    air_pressure: 1010,
-    population_density: 500,
+    windSpeed: 15,
+    pressure: 1010,
+    populationDensity: 500,
     region: 'Mumbai',
-    soil_moisture: 50,
-    river_water_level: 5
+    soilMoisture: 50,
+    riverWaterLevel: 5
   });
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,8 +48,10 @@ const PredictionForm = () => {
           'Follow official channels'
         ]
       });
+      setErrorMsg('');
     } catch (error) {
       console.error("Prediction API Error:", error.response?.data || error.message);
+      setErrorMsg(error.response?.data?.message || error.message || 'Failed to connect to backend.');
     } finally {
       setLoading(false);
     }
@@ -73,7 +76,7 @@ const PredictionForm = () => {
 
             <div className="flex flex-col gap-1">
               <label className="text-sm text-muted-foreground">Disaster Type</label>
-              <select name="disaster_type" value={formData.disaster_type} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none">
+              <select name="disasterType" value={formData.disasterType} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none">
                 <option>Flood</option>
                 <option>Earthquake</option>
                 <option>Cyclone</option>
@@ -93,12 +96,12 @@ const PredictionForm = () => {
             
             <div className="flex flex-col gap-1">
               <label className="text-sm text-muted-foreground">Wind Speed (km/h)</label>
-              <input type="number" name="wind_speed" value={formData.wind_speed} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
+              <input type="number" name="windSpeed" value={formData.windSpeed} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
             </div>
 
             <div className="flex flex-col gap-1">
               <label className="text-sm text-muted-foreground">Air Pressure (hPa)</label>
-              <input type="number" name="air_pressure" value={formData.air_pressure} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
+              <input type="number" name="pressure" value={formData.pressure} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
             </div>
 
             <div className="col-span-1 md:col-span-2 mt-4">
@@ -111,6 +114,14 @@ const PredictionForm = () => {
                 {loading && <div className="absolute inset-0 bg-primary/30 animate-pulse"></div>}
               </button>
             </div>
+            
+            {errorMsg && (
+              <div className="col-span-1 md:col-span-2 mt-2 p-3 bg-danger/20 border border-danger text-danger rounded text-center">
+                <strong>Error:</strong> {errorMsg}
+                <br />
+                <span className="text-xs text-white">Hint: Ensure your Python Server (port 8000) and Node.js Server (port 5000) are both running in your terminal!</span>
+              </div>
+            )}
           </form>
         </div>
 

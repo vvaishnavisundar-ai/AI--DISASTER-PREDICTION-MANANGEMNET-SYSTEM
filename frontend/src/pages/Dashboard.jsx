@@ -15,9 +15,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const config = { headers: { Authorization: `Bearer ${localStorage.getItem('scareychh_token')}` } };
         const [alertRes, predRes] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/alerts`),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/predictions`)
+          axios.get(`${import.meta.env.VITE_API_URL}/api/alerts`, config),
+          axios.get(`${import.meta.env.VITE_API_URL}/api/predictions`, config)
         ]);
         
         setActiveAlerts(alertRes.data.count);

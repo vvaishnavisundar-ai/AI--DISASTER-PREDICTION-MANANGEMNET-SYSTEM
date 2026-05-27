@@ -12,7 +12,8 @@ const LiveMap = () => {
   useEffect(() => {
     const fetchAlerts = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/alerts`);
+        const config = { headers: { Authorization: `Bearer ${localStorage.getItem('scareychh_token')}` } };
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/alerts`, config);
         
         // Map backend alerts to map zones (mocking coordinates based on region name for demo)
         const getCoords = (region) => {

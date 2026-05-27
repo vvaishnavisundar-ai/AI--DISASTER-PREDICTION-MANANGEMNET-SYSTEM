@@ -11,28 +11,43 @@ def predict_disaster():
     
     # Extract data from the Node.js backend request
     disaster_type = data.get('disaster_type', 'Flood')
-    temp = data.get('temperature', 30)
-    rainfall = data.get('rainfall', 0)
-    wind_speed = data.get('wind_speed', 0)
+    temp = float(data.get('temperature', 30))
+    rainfall = float(data.get('rainfall', 0))
+    wind_speed = float(data.get('wind_speed', 0))
+    air_pressure = float(data.get('air_pressure', 1013))
+    humidity = float(data.get('humidity', 50))
     
-    # Mock AI Logic (In a real app, this would be a trained TensorFlow/PyTorch model)
-    probability = 10
+    # Sophisticated Mock AI Logic weighting different environmental factors
+    probability = 5
     severity = "Low"
     status = "Safe"
     
-    if disaster_type == "Flood" and rainfall > 100:
-        probability = min(99, rainfall * 0.4)
+    if disaster_type == "Flood":
+        # Floods depend heavily on rainfall and soil moisture (if we had it, we proxy with humidity)
+        probability = min(99, (rainfall * 0.3) + (temp * 0.1) + ((humidity - 50) * 0.5))
     elif disaster_type == "Earthquake":
-        probability = random.randint(10, 80)
-    elif disaster_type == "Cyclone" and wind_speed > 60:
-        probability = min(99, wind_speed * 0.6)
+        # Earthquakes are random, but we'll mock a baseline + random fluctuation for demo
+        probability = min(99, random.randint(5, 30) + (temp * 0.05))
+    elif disaster_type == "Cyclone":
+        # Cyclones depend heavily on wind speed and low air pressure
+        pressure_drop = max(0, 1013 - air_pressure)
+        probability = min(99, (wind_speed * 0.5) + (pressure_drop * 1.5) + (rainfall * 0.1))
+    elif disaster_type == "Wildfire":
+        # Wildfires depend on high temp, low humidity, high wind
+        humidity_val = max(1, humidity)
+        probability = min(99, ((temp - 30) * 3) + (wind_speed * 0.8) + (100 / humidity_val * 2))
         
-    if probability > 75:
+    probability = max(1, probability) # Ensure it doesn't go below 1
+        
+    if probability >= 80:
         severity = "Critical"
         status = "Evacuate"
-    elif probability > 40:
+    elif probability >= 50:
         severity = "Warning"
         status = "Alert"
+    elif probability >= 30:
+        severity = "Info"
+        status = "Watch"
         
     return jsonify({
         "status": status,

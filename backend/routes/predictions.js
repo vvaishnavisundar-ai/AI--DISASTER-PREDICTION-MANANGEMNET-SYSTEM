@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Prediction = require('../models/Prediction');
+const Alert = require('../models/Alert');
 const { protect, admin } = require('../middleware/authMiddleware');
 const axios = require('axios'); // for calling ML microservice
 
@@ -45,6 +46,21 @@ router.post('/', protect, admin, async (req, res) => {
         };
 
         const prediction = await Prediction.create(predictionData);
+
+        // Real-Time Automation: If AI flags Critical or Warning, auto-generate an Alert
+        if (prediction.severity === 'Critical' || prediction.severity === 'Warning') {
+            const newAlert = await Alert.create({
+                title: `AI Automated ${prediction.severity} Alert: ${prediction.disasterType}`,
+                message: `Automated system detects ${prediction.probability}% probability of ${prediction.disasterType}. Immediate attention required.`,
+                severity: prediction.severity,
+                region: prediction.region
+            });
+
+            // Broadcast via Socket.io if io instance is attached to app
+            if (req.app.get('io')) {
+                req.app.get('io').emit('emergency_alert', newAlert);
+            }
+        }
 
         // Emit socket event to notify clients of new prediction/alert
         if (req.io) {

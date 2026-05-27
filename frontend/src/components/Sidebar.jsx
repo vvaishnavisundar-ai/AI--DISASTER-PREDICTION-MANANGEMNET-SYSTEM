@@ -1,8 +1,15 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Activity, Map, BarChart2, ShieldAlert, Settings, LogOut } from 'lucide-react';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    localStorage.removeItem('scareychh_token');
+    localStorage.removeItem('scareychh_user');
+    navigate('/login');
+  };
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: Activity },
     { name: 'Live Map', path: '/map', icon: Map },
@@ -42,7 +49,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="mt-auto">
-        <button className="flex items-center gap-3 px-4 py-3 w-full text-muted-foreground hover:text-danger transition-colors">
+        <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 w-full text-muted-foreground hover:text-danger transition-colors">
           <LogOut className="w-5 h-5" />
           <span className="font-medium">Logout</span>
         </button>
