@@ -104,6 +104,21 @@ const PredictionForm = () => {
               <input type="number" name="pressure" value={formData.pressure} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
             </div>
 
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-muted-foreground">Population Density</label>
+              <input type="number" name="populationDensity" value={formData.populationDensity} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-muted-foreground">Soil Moisture (%)</label>
+              <input type="number" name="soilMoisture" value={formData.soilMoisture} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm text-muted-foreground">River Water Level (m)</label>
+              <input type="number" name="riverWaterLevel" value={formData.riverWaterLevel} onChange={handleChange} className="bg-background border border-border rounded p-2 text-white focus:border-primary outline-none" />
+            </div>
+
             <div className="col-span-1 md:col-span-2 mt-4">
               <button 
                 type="submit" 

@@ -11,8 +11,9 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB();
+// Connect to database (Server start is deferred until connection)
+const startServer = async () => {
+    await connectDB();
 
 const app = express();
 const server = http.createServer(app);
@@ -45,17 +46,23 @@ app.use((req, res, next) => {
     next();
 });
 
-// Route files
+// Routes
 const authRoutes = require('./routes/auth');
-const predictionRoutes = require('./routes/predictions');
 const alertRoutes = require('./routes/alerts');
+const predictionRoutes = require('./routes/predictions');
+const dashboardRoutes = require('./routes/dashboard');
 const emergencyRoutes = require('./routes/emergency');
+const shelterRoutes = require('./routes/shelters');
+const newsRoutes = require('./routes/news');
 
 // Mount routers
 app.use('/api/auth', authRoutes);
-app.use('/api/predictions', predictionRoutes);
 app.use('/api/alerts', alertRoutes);
+app.use('/api/predictions', predictionRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/emergency', emergencyRoutes);
+app.use('/api/shelters', shelterRoutes);
+app.use('/api/news', newsRoutes);
 
 app.get('/', (req, res) => {
     res.send('ScareyChh API is running...');
@@ -78,6 +85,9 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-});
+    server.listen(PORT, () => {
+        console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    });
+};
+
+startServer();

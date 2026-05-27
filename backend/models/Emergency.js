@@ -1,25 +1,19 @@
 const mongoose = require('mongoose');
 
 const emergencySchema = new mongoose.Schema({
-    shelterName: {
-        type: String,
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
     location: {
         type: String,
         required: true
     },
-    capacity: {
-        type: Number,
-        required: true
-    },
-    contact: {
+    status: {
         type: String,
-        required: true
-    },
-    availability: {
-        type: Boolean,
-        default: true
+        enum: ['Pending', 'Dispatched', 'Resolved'],
+        default: 'Pending'
     },
     createdAt: {
         type: Date,

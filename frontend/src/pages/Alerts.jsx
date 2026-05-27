@@ -41,7 +41,7 @@ const Alerts = () => {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <header className="mb-8">
         <h2 className="text-3xl font-bold tracking-tight">Active Emergency Alerts</h2>
         <p className="text-muted-foreground mt-1">Real-time broadcast system</p>

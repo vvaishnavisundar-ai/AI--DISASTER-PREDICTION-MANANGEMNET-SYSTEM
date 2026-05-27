@@ -32,10 +32,10 @@ router.post('/', protect, admin, async (req, res) => {
             humidity: req.body.humidity || 50,
             wind_speed: req.body.windSpeed || 10,
             air_pressure: req.body.pressure || 1010,
-            population_density: 500, // Default/Mock value for now
+            populationDensity: req.body.populationDensity || 500,
             region: req.body.region,
-            soil_moisture: 50, // Default/Mock value for now
-            river_water_level: 5 // Default/Mock value for now
+            soilMoisture: req.body.soilMoisture || 50,
+            riverWaterLevel: req.body.riverWaterLevel || 5
         });
         
         const predictionData = {
@@ -56,9 +56,9 @@ router.post('/', protect, admin, async (req, res) => {
                 region: prediction.region
             });
 
-            // Broadcast via Socket.io if io instance is attached to app
-            if (req.app.get('io')) {
-                req.app.get('io').emit('emergency_alert', newAlert);
+            // Broadcast via Socket.io
+            if (req.io) {
+                req.io.emit('emergency_alert', newAlert);
             }
         }
 
@@ -68,6 +68,32 @@ router.post('/', protect, admin, async (req, res) => {
         }
 
         res.status(201).json({ success: true, data: prediction });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// @route   PUT /api/predictions/:id
+// @desc    Update a prediction (e.g., status to Resolved)
+// @access  Private/Admin
+router.put('/:id', protect, admin, async (req, res) => {
+    try {
+        const prediction = await Prediction.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+        if (!prediction) return res.status(404).json({ success: false, message: 'Prediction not found' });
+        res.status(200).json({ success: true, data: prediction });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// @route   DELETE /api/predictions/:id
+// @desc    Delete a prediction
+// @access  Private/Admin
+router.delete('/:id', protect, admin, async (req, res) => {
+    try {
+        const prediction = await Prediction.findByIdAndDelete(req.params.id);
+        if (!prediction) return res.status(404).json({ success: false, message: 'Prediction not found' });
+        res.status(200).json({ success: true, data: {} });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

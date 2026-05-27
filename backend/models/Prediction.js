@@ -11,6 +11,9 @@ const predictionSchema = new mongoose.Schema({
     humidity: Number,
     windSpeed: Number,
     pressure: Number,
+    populationDensity: Number,
+    soilMoisture: Number,
+    riverWaterLevel: Number,
     prediction: {
         type: String,
         required: true, // e.g., 'Safe', 'Warning', 'Danger'

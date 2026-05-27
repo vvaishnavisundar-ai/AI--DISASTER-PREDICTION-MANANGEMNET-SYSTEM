@@ -8,7 +8,7 @@ const { protect, admin } = require('../middleware/authMiddleware');
 // @access  Public
 router.get('/', async (req, res) => {
     try {
-        const emergencies = await Emergency.find().sort({ createdAt: -1 });
+        const emergencies = await Emergency.find().populate('userId', 'name email').sort({ createdAt: -1 });
         res.status(200).json({ success: true, count: emergencies.length, data: emergencies });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
@@ -16,9 +16,9 @@ router.get('/', async (req, res) => {
 });
 
 // @route   POST /api/emergency
-// @desc    Add emergency shelter/resource
-// @access  Private/Admin
-router.post('/', protect, admin, async (req, res) => {
+// @desc    Add emergency shelter/resource / Send SOS
+// @access  Private (Citizens and Admins)
+router.post('/', protect, async (req, res) => {
     try {
         const emergency = await Emergency.create(req.body);
         res.status(201).json({ success: true, data: emergency });

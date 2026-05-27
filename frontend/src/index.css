@@ -56,9 +56,84 @@
 .leaflet-container {
     background-color: #0B0F19 !important;
 }
+/* Default Dark Mode (No filter needed since tiles are dark_all) */
 .leaflet-layer,
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out,
 .leaflet-control-attribution {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  filter: none;
+}
+
+/* Fix browser autofill ruining dark mode inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #111827 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Light Mode Overrides */
+body.light-theme {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+body.light-theme .bg-surface {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+body.light-theme .bg-background {
+  background-color: #f1f5f9 !important;
+}
+body.light-theme .text-white {
+  color: #0f172a !important;
+}
+body.light-theme .text-gray-300,
+body.light-theme .text-gray-400,
+body.light-theme .text-muted-foreground {
+  color: #64748b !important;
+}
+body.light-theme .border-border {
+  border-color: #e2e8f0 !important;
+}
+body.light-theme .border-primary\/30 {
+  border-color: rgba(0, 240, 255, 0.5) !important;
+}
+body.light-theme input, 
+body.light-theme textarea,
+body.light-theme select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+body.light-theme table tr:hover {
+  background-color: #f1f5f9 !important;
+}
+body.light-theme .leaflet-container {
+  background-color: #e2e8f0 !important;
+}
+body.light-theme .leaflet-layer,
+body.light-theme .leaflet-control-zoom-in,
+body.light-theme .leaflet-control-zoom-out,
+body.light-theme .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
+}
+
+/* Recharts Light Mode Overrides */
+body.light-theme .recharts-default-tooltip {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+body.light-theme .recharts-tooltip-item {
+  color: #0f172a !important;
+}
+body.light-theme .recharts-cartesian-grid-horizontal line,
+body.light-theme .recharts-cartesian-grid-vertical line {
+  stroke: #e2e8f0;
+}
+body.light-theme .recharts-text {
+  fill: #64748b !important;
+  stroke: none !important;
 }
