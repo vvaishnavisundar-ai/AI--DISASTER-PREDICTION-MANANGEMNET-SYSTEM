@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -7,14 +7,28 @@ import PredictionForm from './pages/PredictionForm';
 import Login from './pages/Login';
 import Alerts from './pages/Alerts';
 import Admin from './pages/Admin';
+import { Menu } from 'lucide-react';
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div className="min-h-screen bg-background text-white font-sans selection:bg-primary/30 flex">
-        <Sidebar />
+      <div className="min-h-screen bg-background text-white font-sans selection:bg-primary/30 flex flex-col md:flex-row">
         
-        <main className="flex-1 ml-64 bg-background">
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center justify-between p-4 border-b border-border bg-surface z-40 sticky top-0">
+          <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            AI Disaster Prediction
+          </h1>
+          <button onClick={() => setIsSidebarOpen(true)} className="p-2 text-white bg-primary/20 rounded">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
+
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        
+        <main className="flex-1 md:ml-64 bg-background w-full">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/login" element={<Login />} />

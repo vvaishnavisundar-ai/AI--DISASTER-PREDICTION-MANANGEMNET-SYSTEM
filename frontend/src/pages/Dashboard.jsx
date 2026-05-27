@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { io } from 'socket.io-client';
 import axios from 'axios';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [activeAlerts, setActiveAlerts] = useState(0);
   const [chartData, setChartData] = useState([]);
   const [stats, setStats] = useState({
@@ -76,15 +78,19 @@ const Dashboard = () => {
       {/* Top Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {[
-          { title: "Active Alerts", value: activeAlerts, color: "text-danger" },
-          { title: "AI Confidence", value: `${stats.avgConfidence}%`, color: "text-primary" },
-          { title: "Predictions Run", value: stats.predictions, color: "text-secondary" },
-          { title: "Risk Level", value: stats.avgConfidence > 75 ? "CRITICAL" : "MODERATE", color: "text-warning" }
+          { title: "Active Alerts", value: activeAlerts, color: "text-danger", path: "/alerts" },
+          { title: "AI Confidence", value: `${stats.avgConfidence}%`, color: "text-primary", path: "/prediction" },
+          { title: "Predictions Run", value: stats.predictions, color: "text-secondary", path: "/prediction" },
+          { title: "Risk Level", value: stats.avgConfidence > 75 ? "CRITICAL" : "MODERATE", color: "text-warning", path: "/map" }
         ].map((stat, i) => (
-          <div key={i} className="bg-surface border border-border p-6 rounded-xl relative overflow-hidden group hover:border-primary/50 transition-colors">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent blur-2xl rounded-full -mr-16 -mt-16 group-hover:from-primary/20 transition-all"></div>
-            <h3 className="text-muted-foreground text-sm font-medium mb-2">{stat.title}</h3>
-            <p className={`text-3xl font-bold font-mono ${stat.color}`}>{stat.value}</p>
+          <div 
+            key={i} 
+            onClick={() => navigate(stat.path)}
+            className="bg-surface border border-border p-6 rounded-xl relative overflow-hidden group hover:border-primary/50 hover:scale-105 hover:shadow-[0_0_20px_rgba(0,240,255,0.15)] transform transition-all duration-300 cursor-pointer"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent blur-2xl rounded-full -mr-16 -mt-16 group-hover:from-primary/30 transition-all duration-500"></div>
+            <h3 className="text-muted-foreground text-sm font-medium mb-2 group-hover:text-white transition-colors">{stat.title}</h3>
+            <p className={`text-3xl font-bold font-mono ${stat.color} group-hover:scale-110 origin-left transition-transform duration-300`}>{stat.value}</p>
           </div>
         ))}
       </div>
