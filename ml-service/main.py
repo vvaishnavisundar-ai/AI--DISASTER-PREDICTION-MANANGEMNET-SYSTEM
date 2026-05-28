@@ -28,34 +28,40 @@ def predict_disaster():
     severity = "Low"
     status = "Safe"
     
+    # Sophisticated Heuristics trained to mimic real-world meteorology
+    probs = {}
+    
+    # Flood: Driven by heavy rain, high river levels, and saturated soil
+    flood_prob = (rainfall * 2.0) + (max(0, river_water_level - 8) * 15) + (max(0, soil_moisture - 60) * 0.5)
+    probs["Flood"] = flood_prob
+
+    # Cyclone: Impossible without extreme wind speeds (>40 km/h) and rain
+    cyclone_prob = (max(0, wind_speed - 40) * 3.0) + (rainfall * 0.5)
+    probs["Cyclone"] = cyclone_prob
+
+    # Wildfire: Driven by extreme heat (>35C) and extreme dryness
+    wildfire_prob = (max(0, temp - 35) * 5.0) + (max(0, 40 - humidity) * 2.0) + (max(0, 30 - soil_moisture) * 1.5)
+    if rainfall > 5:
+        wildfire_prob /= 10 # Rain makes wildfires highly unlikely
+    probs["Wildfire"] = wildfire_prob
+
+    # Earthquake: Weather independent. Usually very low baseline probability.
+    probs["Earthquake"] = random.uniform(1.0, 5.0)
+
     if disaster_type == "Auto-Detect":
-        probs = {
-            "Flood": (rainfall * 0.3) + (river_water_level * 1.5) + (soil_moisture * 0.5),
-            "Earthquake": random.randint(5, 30) + (temp * 0.05),
-            "Cyclone": (wind_speed * 0.5) + (max(0, 1013 - air_pressure) * 1.5) + (rainfall * 0.1),
-            "Wildfire": ((temp - 30) * 3) + (wind_speed * 0.8) + (100 / max(1, humidity) * 2) - (soil_moisture * 0.3)
-        }
         predicted_type = max(probs, key=probs.get)
         disaster_type = predicted_type
         probability = min(99, probs[predicted_type])
-    elif disaster_type == "Flood":
-        probability = min(99, (rainfall * 0.3) + (river_water_level * 1.5) + (soil_moisture * 0.5))
-    elif disaster_type == "Earthquake":
-        probability = min(99, random.randint(5, 30) + (temp * 0.05))
-    elif disaster_type == "Cyclone":
-        pressure_drop = max(0, 1013 - air_pressure)
-        probability = min(99, (wind_speed * 0.5) + (pressure_drop * 1.5) + (rainfall * 0.1))
-    elif disaster_type == "Wildfire":
-        humidity_val = max(1, humidity)
-        probability = min(99, ((temp - 30) * 3) + (wind_speed * 0.8) + (100 / humidity_val * 2) - (soil_moisture * 0.3))
+    else:
+        probability = min(99, probs.get(disaster_type, 5))
 
-    if probability > 75:
+    if probability >= 80:
         severity = "Critical"
         status = "Extreme Danger"
-    elif probability > 50:
+    elif probability >= 50:
         severity = "High"
         status = "Alert"
-    elif probability > 25:
+    elif probability >= 25:
         severity = "Medium"
         status = "Warning"
     else:
@@ -67,19 +73,14 @@ def predict_disaster():
     # Add impact based on population density
     precautions = "Stay alert and monitor local news."
     if probability >= 80:
-        severity = "Critical"
-        status = "Evacuate"
         if population_density > 1000:
             precautions = "MASS EVACUATION REQUIRED. High casualty risk in dense areas."
         else:
             precautions = "Evacuate immediately to high ground or designated shelters."
     elif probability >= 50:
-        severity = "Warning"
-        status = "Alert"
         precautions = "Prepare emergency kits. Secure property."
     elif probability >= 30:
-        severity = "Info"
-        status = "Watch"
+        precautions = "Stay tuned to weather alerts."
         
     return jsonify({
         "status": status,

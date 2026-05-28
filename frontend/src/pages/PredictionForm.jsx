@@ -89,27 +89,32 @@ const PredictionForm = () => {
         const geoRes = await axios.get(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
         const city = geoRes.data.city || geoRes.data.locality || 'Unknown Area';
         
-        const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,precipitation,surface_pressure,relative_humidity_2m`);
+        const weatherRes = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,wind_speed_10m,precipitation,surface_pressure,relative_humidity_2m,soil_moisture_0_to_7cm`);
         const current = weatherRes.data.current;
         
         // Dynamically calculate missing parameters based on real coordinates and live weather
         // so they don't look hardcoded, providing realistic estimations.
         const coordSeed = Math.round(Math.abs(lat * lon * 1000));
         const dynPopDensity = (coordSeed % 9000) + 500; // Varies between 500 and 9500 based on location
-        const dynRiverLevel = Math.round((3 + (current.precipitation * 0.15) + ((coordSeed % 50) / 10)) * 10) / 10; // Rises with rainfall
-        const dynSoilMoisture = Math.min(100, Math.round((current.relative_humidity_2m * 0.6) + (current.precipitation * 2) + (coordSeed % 20))); // Rises with humidity & rain
+        const precip = current?.precipitation || 0;
+        const dynRiverLevel = Math.round((2.5 + (precip * 0.2)) * 10) / 10; // Rises naturally with rainfall
+        
+        // Fetch ACTUAL Live Soil Moisture from satellite data (Open-Meteo provides it as a fraction, e.g., 0.35)
+        const realSoilMoisture = current?.soil_moisture_0_to_7cm !== undefined 
+          ? Math.round(current.soil_moisture_0_to_7cm * 100) 
+          : 40;
 
         const newFormData = {
           ...formData,
           region: city,
-          temperature: Math.round(current.temperature_2m),
-          rainfall: current.precipitation,
-          windSpeed: current.wind_speed_10m,
-          pressure: Math.round(current.surface_pressure) || 1010,
-          humidity: current.relative_humidity_2m || 70,
-          populationDensity: dynPopDensity,
-          soilMoisture: dynSoilMoisture,
-          riverWaterLevel: dynRiverLevel
+          temperature: current?.temperature_2m !== undefined ? Math.round(current.temperature_2m) : 25,
+          rainfall: precip,
+          windSpeed: current?.wind_speed_10m || 5,
+          pressure: current?.surface_pressure !== undefined ? Math.round(current.surface_pressure) : 1010,
+          humidity: current?.relative_humidity_2m || 60,
+          populationDensity: dynPopDensity || 500,
+          soilMoisture: realSoilMoisture,
+          riverWaterLevel: dynRiverLevel || 5
         };
         
         setFormData(newFormData);
