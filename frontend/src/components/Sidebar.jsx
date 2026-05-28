@@ -52,7 +52,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       {/* Sidebar Content */}
       <div className={`w-64 bg-surface border-r border-border h-screen flex flex-col p-4 fixed left-0 top-0 z-[9999] transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div className="flex items-center justify-between mb-8 px-2">
-          <div className="flex items-center gap-3">
+          <div 
+            className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate('/')}
+          >
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center animate-pulse">
               <Activity className="w-5 h-5 text-primary" />
             </div>

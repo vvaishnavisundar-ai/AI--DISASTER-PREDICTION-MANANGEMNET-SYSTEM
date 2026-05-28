@@ -154,8 +154,9 @@ const Dashboard = () => {
     };
     
     const loadAllData = async () => {
-      await Promise.all([fetchBackendData(), fetchRealLocationData()]);
+      await fetchBackendData();
       setLoading(false);
+      fetchRealLocationData(); // Fetch in background so it doesn't block UI
     };
 
     loadAllData();

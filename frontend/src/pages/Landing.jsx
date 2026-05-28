@@ -55,7 +55,7 @@ const Landing = () => {
             v2.0 Enterprise Intelligence Core
           </motion.div>
 
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight leading-tight">
+          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-bold tracking-tight leading-tight text-white">
             National <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Disaster Command</span> Center
           </motion.h1>
 
@@ -73,7 +73,7 @@ const Landing = () => {
             </button>
             <button 
               onClick={() => navigate('/login')}
-              className="flex items-center gap-2 px-8 py-4 rounded-lg border border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-500 font-bold text-lg transition-all backdrop-blur-sm"
+              className="flex items-center gap-2 px-8 py-4 rounded-lg border border-gray-700 bg-gray-900/50 hover:bg-gray-800 hover:border-gray-500 font-bold text-lg text-gray-300 transition-all backdrop-blur-sm"
             >
               View Live Map <ArrowRight className="w-5 h-5" />
             </button>
@@ -96,7 +96,7 @@ const Landing = () => {
               <div className={`p-4 rounded-full ${feature.bg} mb-4`}>
                 <feature.icon className={`w-8 h-8 ${feature.color}`} />
               </div>
-              <h3 className="font-bold text-lg">{feature.title}</h3>
+              <h3 className="font-bold text-lg text-gray-100">{feature.title}</h3>
             </div>
           ))}
         </motion.div>
