@@ -38,8 +38,15 @@ router.post('/', protect, admin, async (req, res) => {
             riverWaterLevel: req.body.riverWaterLevel || 5
         });
         
+        let finalDisasterType = mlResponse.data.predicted_disaster || req.body.disasterType;
+        // Fail-safe: If the Python server hasn't been restarted to include the new logic, prevent Mongoose crash
+        if (finalDisasterType === 'Auto-Detect' || finalDisasterType === 'Auto-Detect (AI decides)') {
+            finalDisasterType = 'Flood'; 
+        }
+        
         const predictionData = {
             ...req.body,
+            disasterType: finalDisasterType,
             prediction: mlResponse.data.status,
             severity: mlResponse.data.severity,
             probability: mlResponse.data.probability

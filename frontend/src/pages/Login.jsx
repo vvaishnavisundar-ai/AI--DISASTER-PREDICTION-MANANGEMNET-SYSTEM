@@ -40,7 +40,11 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Authentication failed. Invalid credentials.');
+      if (!err.response) {
+        setError('Network Error: Cannot connect to server. Is the backend running?');
+      } else {
+        setError(err.response?.data?.message || 'Authentication failed. Invalid credentials.');
+      }
     } finally {
       setLoading(false);
     }

@@ -28,7 +28,17 @@ def predict_disaster():
     severity = "Low"
     status = "Safe"
     
-    if disaster_type == "Flood":
+    if disaster_type == "Auto-Detect":
+        probs = {
+            "Flood": (rainfall * 0.3) + (river_water_level * 1.5) + (soil_moisture * 0.5),
+            "Earthquake": random.randint(5, 30) + (temp * 0.05),
+            "Cyclone": (wind_speed * 0.5) + (max(0, 1013 - air_pressure) * 1.5) + (rainfall * 0.1),
+            "Wildfire": ((temp - 30) * 3) + (wind_speed * 0.8) + (100 / max(1, humidity) * 2) - (soil_moisture * 0.3)
+        }
+        predicted_type = max(probs, key=probs.get)
+        disaster_type = predicted_type
+        probability = min(99, probs[predicted_type])
+    elif disaster_type == "Flood":
         probability = min(99, (rainfall * 0.3) + (river_water_level * 1.5) + (soil_moisture * 0.5))
     elif disaster_type == "Earthquake":
         probability = min(99, random.randint(5, 30) + (temp * 0.05))
@@ -38,6 +48,19 @@ def predict_disaster():
     elif disaster_type == "Wildfire":
         humidity_val = max(1, humidity)
         probability = min(99, ((temp - 30) * 3) + (wind_speed * 0.8) + (100 / humidity_val * 2) - (soil_moisture * 0.3))
+
+    if probability > 75:
+        severity = "Critical"
+        status = "Extreme Danger"
+    elif probability > 50:
+        severity = "High"
+        status = "Alert"
+    elif probability > 25:
+        severity = "Medium"
+        status = "Warning"
+    else:
+        severity = "Low"
+        status = "Safe"
         
     probability = max(1, probability) # Ensure it doesn't go below 1
         
@@ -62,6 +85,7 @@ def predict_disaster():
         "status": status,
         "probability": int(probability),
         "severity": severity,
+        "predicted_disaster": disaster_type,
         "confidence": random.randint(85, 98),
         "precautions": precautions,
         "message": "AI Engine Prediction complete."
