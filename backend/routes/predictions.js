@@ -76,7 +76,17 @@ router.post('/', protect, admin, async (req, res) => {
 
         res.status(201).json({ success: true, data: prediction });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error("Node API Error:", error.message);
+        
+        // Intelligent Error Diagnostics for Deployed Environments
+        let detailedMessage = error.message;
+        if (error.code === 'ECONNREFUSED' && (!process.env.ML_SERVICE_URL || process.env.ML_SERVICE_URL.includes('127.0.0.1'))) {
+            detailedMessage = "FATAL: The Node.js server cannot find the Python ML Server. You must add the 'ML_SERVICE_URL' Environment Variable in your Render Node.js Dashboard pointing to your deployed Python URL (e.g., https://my-python-app.onrender.com).";
+        } else if (error.response) {
+            detailedMessage = `Python ML Server Error: ${error.response.status} - ${JSON.stringify(error.response.data)}`;
+        }
+
+        res.status(500).json({ success: false, message: detailedMessage });
     }
 });
 

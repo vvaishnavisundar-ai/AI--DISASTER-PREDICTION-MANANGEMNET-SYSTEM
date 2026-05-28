@@ -92,5 +92,7 @@ def predict_disaster():
     })
 
 if __name__ == '__main__':
-    # Run the server on port 8000
-    app.run(host='127.0.0.1', port=8000)
+    import os
+    # Bind to 0.0.0.0 and the Render injected PORT (or 8000 locally) so Render's load balancer can reach it
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)

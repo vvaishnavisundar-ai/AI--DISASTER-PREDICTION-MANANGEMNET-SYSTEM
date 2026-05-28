@@ -71,7 +71,11 @@ const PredictionForm = () => {
       setErrorMsg('');
     } catch (error) {
       console.error("Prediction API Error:", error.response?.data || error.message);
-      setErrorMsg(error.response?.data?.message || error.message || 'Failed to connect to backend.');
+      if (error.response?.status === 502 || error.message.includes('502')) {
+        setErrorMsg("The AI Servers are waking up from Sleep Mode (Free Server Limitation). Please wait 30 seconds and click Run Prediction again!");
+      } else {
+        setErrorMsg(error.response?.data?.message || error.message || 'Failed to connect to backend.');
+      }
     } finally {
       setLoading(false);
     }
